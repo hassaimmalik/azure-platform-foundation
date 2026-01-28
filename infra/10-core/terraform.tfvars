@@ -1,0 +1,2 @@
+alert_email     = "hmalik@typefi.com"
+subscription_id = "7b99d635-e1a4-4bdf-ab67-b6f98b73a423"
