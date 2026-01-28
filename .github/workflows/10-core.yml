@@ -17,6 +17,7 @@ jobs:
   plan:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    environment: prod
     defaults:
       run:
         working-directory: infra/10-core
@@ -36,8 +37,9 @@ jobs:
       - run: terraform plan
 
   apply:
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment: prod
     defaults:
       run:
         working-directory: infra/10-core
