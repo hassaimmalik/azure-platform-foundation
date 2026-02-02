@@ -16,15 +16,6 @@ resource "tls_private_key" "ssh" {
   rsa_bits  = 4096
 }
 
-resource "azurerm_public_ip" "pip" {
-  name                = "pip-vm-ansible-${var.env}"
-  location            = var.location
-  resource_group_name = data.azurerm_resource_group.workload.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-  tags                = var.tags
-}
-
 resource "azurerm_network_interface" "nic" {
   name                = "nic-vm-ansible-${var.env}"
   location            = var.location
@@ -35,7 +26,6 @@ resource "azurerm_network_interface" "nic" {
     name                          = "ipconfig1"
     subnet_id                     = data.azurerm_subnet.target.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
