@@ -34,11 +34,13 @@ variable "hub_subnets" {
   }))
   description = "Hub subnets map"
 
-  default = {
-    AzureBastionSubnet = { address_prefixes = ["10.0.0.0/26"] }
-    snet-shared        = { address_prefixes = ["10.0.1.0/24"] }
-    snet-services      = { address_prefixes = ["10.0.2.0/24"] }
-  }
+default = {
+  AzureBastionSubnet = { address_prefixes = ["10.0.0.0/26"] }
+  snet-shared        = { address_prefixes = ["10.0.1.0/24"] }
+  snet-services      = { address_prefixes = ["10.0.2.0/24"] }
+
+  snet-automation    = { address_prefixes = ["10.0.50.0/24"] }
+}
 }
 
 variable "tags" {
