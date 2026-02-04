@@ -26,3 +26,31 @@ resource "azurerm_subnet_network_security_group_association" "assoc_automation" 
   subnet_id                 = azurerm_subnet.hub["snet-automation"].id
   network_security_group_id = azurerm_network_security_group.nsg_automation.id
 }
+
+resource "azurerm_network_security_rule" "allow_ssh_from_my_ip" {
+  name                        = "Allow-SSH-From-My-IP"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "22"
+  source_address_prefix       = "82.37.87.249/32"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.networking_rg_name
+  network_security_group_name = azurerm_network_security_group.nsg_automation.name
+}
+
+resource "azurerm_network_security_rule" "allow_awx_ui_from_my_ip" {
+  name                        = "Allow-AWX-UI-From-My-IP"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "8052"
+  source_address_prefix       = "82.37.87.249/32"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.networking_rg_name
+  network_security_group_name = azurerm_network_security_group.nsg_automation.name
+}
