@@ -1,5 +1,5 @@
 resource "azurerm_virtual_network" "hub" {
-   name                = "vnet-hub-${var.env}"
+  name                = "vnet-hub-${var.env}"
   location            = var.location
   resource_group_name = var.networking_rg_name
 
