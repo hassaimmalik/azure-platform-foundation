@@ -9,6 +9,10 @@ on:
     paths:
       - "infra/20-network-hub/**"
 
+concurrency:
+  group: tf-20-network-hub
+  cancel-in-progress: true
+
 permissions:
   id-token: write
   contents: read
@@ -34,10 +38,10 @@ jobs:
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
-      - run: terraform plan
+      - run: terraform plan -lock-timeout=5m
 
   apply:
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: prod
     defaults:
@@ -54,4 +58,4 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - run: terraform init
-      - run: terraform apply -auto-approve
+      - run: terraform apply -auto-approve -lock-timeout=5m
