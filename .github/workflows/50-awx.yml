@@ -35,12 +35,6 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
-      # Generate SSH keypair for the VM (public key consumed by Terraform)
-      - name: Generate SSH key
-        run: |
-          ssh-keygen -t rsa -b 4096 -f awx_id_rsa -N ""
-          ls -la
-
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
