@@ -1,24 +1,3 @@
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "rg-platform-bootstrap"
-    storage_account_name = "sttfstateslvr8j"
-    container_name       = "tfstate"
-    key                  = "50-awx.tfstate"
-  }
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.100.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-  subscription_id = var.subscription_id
-}
-
 # Existing hub automation subnet
 data "azurerm_resource_group" "rg_networking" {
   name = var.networking_rg_name
