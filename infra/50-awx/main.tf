@@ -49,7 +49,7 @@ resource "azurerm_linux_virtual_machine" "vm_awx" {
 
   admin_ssh_key {
     username   = var.admin_username
-    public_key = file(var.ssh_public_key_path)
+    public_key = var.admin_ssh_public_key
   }
 
   os_disk {
