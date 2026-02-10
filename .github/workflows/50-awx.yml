@@ -1,0 +1,72 @@
+name: terraform-50-awx
+
+on:
+  pull_request:
+    paths:
+      - "infra/50-awx/**"
+  push:
+    branches: ["main"]
+    paths:
+      - "infra/50-awx/**"
+
+concurrency:
+  group: tf-50-awx
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    environment: prod
+    defaults:
+      run:
+        working-directory: infra/50-awx
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      # Generate SSH keypair for the VM (public key consumed by Terraform)
+      - name: Generate SSH key
+        run: |
+          ssh-keygen -t rsa -b 4096 -f awx_id_rsa -N ""
+          ls -la
+
+      - run: terraform fmt -check
+      - run: terraform init
+      - run: terraform validate
+      - run: terraform plan -lock-timeout=5m
+
+  apply:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod
+    defaults:
+      run:
+        working-directory: infra/50-awx
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Generate SSH key
+        run: |
+          ssh-keygen -t rsa -b 4096 -f awx_id_rsa -N ""
+          ls -la
+
+      - run: terraform init
+      - run: terraform apply -auto-approve -lock-timeout=5m
