@@ -64,11 +64,6 @@ resource "azurerm_linux_virtual_machine" "vm_awx" {
     version   = "latest"
   }
 
-    lifecycle {
-    create_before_destroy = true
-  }
-
-
   tags = merge(var.tags, {
     role = "awx"
   })
