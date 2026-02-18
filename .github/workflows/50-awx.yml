@@ -25,6 +25,8 @@ jobs:
     defaults:
       run:
         working-directory: infra/50-awx
+    env:
+      TF_VAR_admin_ssh_public_key: ${{ vars.TF_VAR_ADMIN_SSH_PUBLIC_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
@@ -38,7 +40,7 @@ jobs:
       - run: terraform fmt -check
       - run: terraform init
       - run: terraform validate
-      - run: terraform plan -lock-timeout=5m
+      - run: terraform plan -lock-timeout=5m -input=false
 
   apply:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -47,6 +49,8 @@ jobs:
     defaults:
       run:
         working-directory: infra/50-awx
+    env:
+      TF_VAR_admin_ssh_public_key: ${{ vars.TF_VAR_ADMIN_SSH_PUBLIC_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
@@ -57,10 +61,5 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Generate SSH key
-        run: |
-          ssh-keygen -t rsa -b 4096 -f awx_id_rsa -N ""
-          ls -la
-
       - run: terraform init
-      - run: terraform apply -auto-approve -lock-timeout=5m
+      - run: terraform apply -auto-approve -lock-timeout=5m -input=false
