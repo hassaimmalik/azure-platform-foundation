@@ -33,7 +33,7 @@ variable "admin_username" {
 }
 
 # IMPORTANT: this path must exist on the GitHub runner.
-# We'll handle that by generating the key in the workflow and writing it to a file.
+# We'll handle that by generating the key in the workflow and writing it to the file.
 
 variable "vm_size" {
   type    = string
