@@ -66,6 +66,7 @@ resource "azurerm_linux_virtual_machine" "vm_awx" {
 
   tags = merge(var.tags, {
     role = "awx"
+    key_version = "2"
   })
 }
 
